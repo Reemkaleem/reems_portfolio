@@ -5,7 +5,7 @@ import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
 import CanvasLoader from "../Loader";
 
 const Computers = ({ isMobile }) => {
-  const computer = useGLTF("./desktop_pc/scene.gltf");
+  const computer = useGLTF("/reems_portfolio/desktop_pc/scene.gltf");
 
   return (
     <mesh>
@@ -31,6 +31,7 @@ const Computers = ({ isMobile }) => {
 
 const ComputersCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     // Add a listener for changes to the screen size
@@ -53,6 +54,10 @@ const ComputersCanvas = () => {
     };
   }, []);
 
+  if (hasError) {
+    return null; // Don't render anything if there's an error
+  }
+
   return (
     <Canvas
       frameloop='demand'
@@ -60,6 +65,9 @@ const ComputersCanvas = () => {
       dpr={[1, 2]}
       camera={{ position: [20, 3, 5], fov: 25 }}
       gl={{ preserveDrawingBuffer: true }}
+      onCreated={({ gl }) => {
+        gl.domElement.style.opacity = '1';
+      }}
     >
       <Suspense fallback={<CanvasLoader />}>
         <OrbitControls
